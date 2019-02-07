@@ -11,8 +11,8 @@ Main requirements
 -----------------
 Be reasonable: There may be semantic hoops that you can jump through to create something that is "technically correct". Do not hesitate to contact us if you feel that something is ambiguous or missing from these requirements.
 
-No orders are lost
- - Once the light on an hall call button (buttons for calling an elevator to that floor; top 6 buttons on the control panel) is turned on, an elevator should arrive at that floor
+### No orders are lost
+ - Once the light on a hall call button (buttons for calling an elevator to that floor; top 6 buttons on the control panel) is turned on, an elevator should arrive at that floor
  - Similarly for a cab call (for telling the elevator what floor you want to exit at; front 4 buttons on the control panel), but only the elevator at that specific workspace should take the order
  - This means handling network packet loss, losing network connection entirely, software that crashes, and losing power - both to the elevator motor and the machine that controls the elevator
    - For cab orders, handling loss of power/software crash implies that the orders are executed once service is restored
@@ -22,20 +22,21 @@ No orders are lost
    - It should also keep taking new cab calls, so that people can exit the elevator even if it is disconnected from the network
    - The elevator software should not require reinitialization (manual restart) after intermittent network or motor power loss
 
-Multiple elevators should be more efficient than one
+### Multiple elevators should be more efficient than one
  - The orders should be distributed across the elevators in a reasonable way
    - Ex: If all three elevators are idle and two of them are at the bottom floor, then a new order at the top floor should be handled by the closest elevator (ie. neither of the two at the bottom).
  - You are free to choose and design your own "cost function" of some sort: Minimal movement, minimal waiting time, etc.
  - The project is not about creating the "best" or "optimal" distribution of orders. It only has to be clear that the elevators are cooperating and communicating.
  
-An individual elevator should behave sensibly and efficiently
+### An individual elevator should behave sensibly and efficiently
  - No stopping at every floor "just to be safe"
  - The hall "call upward" and "call downward" buttons should behave differently
    - Ex: If the elevator is moving from floor 1 up to floor 4 and there is a downward order at floor 3, then the elevator should not stop on its way upward, but should return back to floor 3 on its way down
  
-The lights and buttons should function as expected
+### The lights and buttons should function as expected
  - The hall call buttons on all workspaces should let you summon an elevator
- - The lights on the hall buttons should show the same thing on all workspaces
+ - Under normal circumstances, the lights on the hall buttons should show the same thing on all workspaces 
+   - Under circumstances with high packet loss, at least one light must work as expected
  - The cab button lights should not be shared between elevators
  - The cab and hall button lights should turn on as soon as is reasonable after the button has been pressed
    - Not ever turning on the button lights because "no guarantee is offered" is not a valid solution
