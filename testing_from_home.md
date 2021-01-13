@@ -74,14 +74,4 @@ Elevator hardware
 
 One of the tests involves disconnecting the power to the elevator motor. You can simulate this by pressing the `[key_moveStop]` key in the simulator window, which by default is bound to `8` (numpad or number row, both work). If your software is constantly, consistently, or confusingly sending commands to move the elevator, you can still force the elevator to get stuck by continuously spamming the moveStop key.
 
-Specification clarifications
-============================
 
-As is tradition, there are some inevitable problems with the specification...
-
- - Cab order redundancy:
-   - In order to open up more valid solutions than saving cab orders to disk, it should be possible to store the backup of cab requests on the other nodes, by using the assumption that *at least one other elevator is working normally*. However, the current specification requires that cab requests be served when the elevator is disconnected (in order to let people off), which means that no service guarantee can be delivered if the backup copy of that cab order must be stored on an unreachable node, meaning that no light should be turned on.  
-     In this case, the correct solution would be to service the request without turning on the light.  
-   
-     Double-however, another part of the specification says that you can assume that there are no two simultaneous errors, which means that once a node has lost connection to the network (making it unable to backup the cab request), it cannot also crash (guaranteeing that it will serve the un-backed-up cab request).  
-     Because of this, servicing the request *and also turning on the light* is also a valid solution.

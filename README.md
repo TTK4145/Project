@@ -70,10 +70,12 @@ Permitted assumptions
 ---------------------
 
 The following assumptions will always be true during testing:
- - At least one elevator is always working normally
- - No multiple simultaneous errors: Only one error happens at a time, but the system must still return to a fail-safe state after this error
-   - (Recall that network packet loss is *not* an error in this context, and must be considered regardless of any other (single) error that can occur)
- - No network partitioning: There will never be a situation where there are multiple sets of two or more elevators with no connection between them
+ 1. At least one elevator is always working normally
+ 2. No multiple simultaneous errors: Only one error happens at a time, but the system must still return to a fully operational state after this error
+    - Recall that network packet loss is *not* an error in this context, and must be considered regardless of any other (single) error that can occur
+ 3. No network partitioning: There will never be a situation where there are multiple sets of two or more elevators with no connection between them
+ 4. Cab call redundancy with a single elevator is not required
+    - Given assumptions **1** and **2**, a system containing only one elevator is assumed to be unable to fail
    
 Additional resources
 --------------------
