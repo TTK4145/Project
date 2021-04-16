@@ -8,8 +8,6 @@ The UDP-broadcast-only network modules (Go, D, Rust) are designed to be able to 
 
 You are allowed to manually input whatever you need for network configuration, such as manually naming the peers' names, ports, or whatever else in order to avoid needing to write general peer discovery.
 
-This is not a good time to be having network problems, so if you have any problems ask for help as soon as possible.
-
 Testing network problems
 ------------------------
 
@@ -20,7 +18,7 @@ Testing resilience to disconnects is hard when there is no network cable to unpl
  - Linux lets you block outgoing communication for programs run as part of a group, but not incoming - which is like disconnecting one half of the network cable.
  - Windows let's you block all network communication (in and out) for a single program (effectively disconnecting that program), but only for network activity that isn't on localhost or loopback - which is what all our network communication will be.
  
-This means that creating test scenarios for disconnecting one of three elevators is not easily possible using just the system features. However, we can block *all* communication that isn't to and from the simulators, which lets us test what happens when all the elevators are (simultaneously) disconnected. Because of this, we recommend **only using two elevators**, as testing with three won't test anything different than testing with just two.
+This means that creating test scenarios for disconnecting one of three elevators is not easily possible using just the system features. However, we can block *all* communication that isn't to and from the simulators, which lets us test what happens when all the elevators are (simultaneously) disconnected. Because of this, we recommend **only using two elevators** when testing on one machine, as testing with three won't test anything different than testing with just two. But if you have access to multiple machines (real or virtual), this becomes a lot easier to test.
 
 Blocking everything is probably a little aggressive, as you might want to use a web browser, screen share, ssh, or anything else that uses the internet while testing for disconnects (or packet loss). Instead, you might want to block just the communication between *your* programs. To do this, you need to know what ports and protocols your program is using for communication. For those of you who have programmed your own ports manually this shouldn't be a problem to find (typically: the ports you pass in to the network module you are handed, or all the ports passed to any network call that looks something like "bind"), but some of you use other infrastructure where this is more... hidden (Elixir/Erlang, or anything else that "just works").
 
@@ -52,19 +50,20 @@ In case you want to block *everything*, change the rule to let the simulator(s) 
     sudo iptables -A INPUT -j DROP
     ```  
    (And `sudo iptables -F` to flush - as before)
- - Windows: use a program called [clumsy](http://jagt.github.io/clumsy/), and set the rule to  
+ - Windows: Use a program called [clumsy](http://jagt.github.io/clumsy/), and set the rule to  
     ```
     udp or (tcp.DstPort != sim1 and tcp.SrcPort != sim1 and tcp.DstPort != sim2 and tcp.SrcPort != sim2)
     ```  
     where `sim1` and `sim2` are the ports used by the simulators, then enable the `Drop` function with 20% or 100% probability.
+ - Mac: Please tell me - submit a pull request or email me.
 
 If your program needs to perform some internal communication using sockets, then you will have to add exceptions to the rules for packet loss and disconnect testing. Ask for help if you need it.
  
-### If you insist on testing three
+### If you insist on testing three elevators on one machine
 
-While it is both not required and not recommended to test network problems with three elevators, here are two possible ways of doing it - if you insist:
+Here are two possible ways of doing it:
 
- - Add disconnect (and packet loss, if you want) to your own networking code. Since the stop button and obstruction switch are not in use, you could use those to trigger the network-problem effects.
+ - Add disconnect (and packet loss, if you want) to your own networking code. Since the stop button is not in use, you could use that to trigger the network-problem effects.
  - Run one of the elevators in a virtual machine (like VirtualBox), then disconnect all networking to the virtual machine. Chances are that your virtual machine will be some other operating system than the host machine, so this is not always possible. The most common combination of a Windows host with some Linux VM running on VirtualBox seems to work nicely, with no extra configuration needed.
  
 
