@@ -30,13 +30,27 @@ Blocking everything is probably a little aggressive, as you might want to use a 
     ```
     where PROTOCOL is either `tcp` or `udp`, and PORTn is whatever ports you bind to. You will need one line for each port you use, if you use multiple.
     To test disconnects, just up the `--probability` to `1`.
-    Use `sudo iptables -F` to flush the filter chain when you are done
+    Use `sudo iptables -F` to flush the filter chain when you are done.
 
  - Windows: use a program called [clumsy](http://jagt.github.io/clumsy/), and set the rule to 
     ```
     udp and (udp.DstPort == PORT1 or udp.DstPort == PORT2 [or ...])
     ```
     where the PORTn's are whatever ports you bind to, then enable the `Drop` function for both inbound and outbound with a chance of 20% to test packet loss, or 100% to test disconnects.
+ - Mac (*Temporary solution*): Use [Network Link Conditioner](https://developer.apple.com/download/more/?q=Additional%20Tools). (Select your version of Xcode, then select the `.dmg` download, and install. Network Link Conditioner is found in the Hardware folder. See [this blog post for more detailed install/usage instructions](https://nshipster.com/network-link-conditioner/).)  
+    Make your own profile from the "Manage Profiles..." menu, then set the *Downlink Packets Dropped* and *Uplink Packets Dropped* to 20%.  
+    *If you cannot find Network Link Conditioner in Settings the next time you want to use it, search for it in spotlight (`cmd + space`).* 
+ - Mac: (*The real solution - but incomplete*): Network Link Conditioner affects *all* traffic, including traffic to the simulator. This means testing disconnects (100% loss) would also disconnect the simulator. The real solution is to use `dummynet` and `packetfilter`, something like this..?  
+    ``` sh
+    sudo pfctl -E  
+    sudo dnctl pipe 1 config plr 0.2
+    echo "dummynet out proto PROTOCOL from PORTn to any pipe 1" | sudo pfctl -f -
+    echo "dummynet in proto PROTOCOL from any to PORTn pipe 1" | sudo pfctl -f -
+    ```
+    where PROTOCOL is either `tcp` or `udp`, and PORTn is whatever ports you bind to. You will need one line for each port you use, if you use multiple.  
+    Use `sudo pfctl -d` to disable the packet filtering.  
+    *Questions: Do we have to configure the pipe (`dnctl`) each time? Do we have to configure the rules (`dummynet`) each time? If not, how do we clear the rules?*
+   
 
 ### Blocking everything
 
@@ -55,7 +69,6 @@ In case you want to block *everything*, change the rule to let the simulator(s) 
     udp or (tcp.DstPort != sim1 and tcp.SrcPort != sim1 and tcp.DstPort != sim2 and tcp.SrcPort != sim2)
     ```  
     where `sim1` and `sim2` are the ports used by the simulators, then enable the `Drop` function with 20% or 100% probability.
- - Mac: Please tell me - submit a pull request or email me.
 
 If your program needs to perform some internal communication using sockets, then you will have to add exceptions to the rules for packet loss and disconnect testing. Ask for help if you need it.
  
