@@ -24,12 +24,19 @@ Blocking everything is probably a little aggressive, as you might want to use a 
 
  - Linux: use a program called `iptables`
     ``` sh
+    # To specify for specific port:
     sudo iptables -A INPUT -p PROTOCOL --dport PORT1 -m statistic --mode random --probability 0.2 -j DROP
     sudo iptables -A INPUT -p PROTOCOL --dport PORT2 -m statistic --mode random --probability 0.2 -j DROP
     # +more for other ports you use
     ```
+    
+    or to cover _all_ ports at once (do not combine with above, since it will lead to 0.2^2 packet-loss)
+    
+    ```sh
+    sudo iptables -A INPUT -p PROTOCOL -m statistic --mode random --probability 0.2 -j DROP
+    ```
+    
     where PROTOCOL is either `tcp` or `udp`, and PORTn is whatever ports you bind to. You will need one line for each port you use, if you use multiple.
-    To test disconnects, just up the `--probability` to `1`.
     Use `sudo iptables -F` to flush the filter chain when you are done.
 
  - Windows: use a program called [clumsy](http://jagt.github.io/clumsy/), and set the rule to 
@@ -62,6 +69,7 @@ In case you want to block *everything*, change the rule to let the simulator(s) 
     sudo iptables -A INPUT -p tcp --sport 15657 -j ACCEPT
     # +more for other simulator ports you use
     sudo iptables -A INPUT -j DROP
+    sudo iptables -A OUTPUT -j DROP
     ```  
    (And `sudo iptables -F` to flush - as before)
  - Windows: Use a program called [clumsy](http://jagt.github.io/clumsy/), and set the rule to  
@@ -77,8 +85,15 @@ If your program needs to perform some internal communication using sockets, then
 Here are two possible ways of doing it:
 
  - Add disconnect (and packet loss, if you want) to your own networking code. Since the stop button is not in use, you could use that to trigger the network-problem effects.
- - Run one of the elevators in a virtual machine (like VirtualBox), then disconnect all networking to the virtual machine. Chances are that your virtual machine will be some other operating system than the host machine, so this is not always possible. The most common combination of a Windows host with some Linux VM running on VirtualBox seems to work nicely, with no extra configuration needed.
- 
+ - Run one of the elevators in a virtual machine (like VirtualBox or Docker), then disconnect all networking to the virtual machine. Chances are that your virtual machine will be some other operating system than the host machine, so this is not always possible. The most common combination of a Windows host with some Linux VM running on VirtualBox seems to work nicely, with no extra configuration needed.
+ - Note for running with Docker: if you want to use `iptables` inside of a Docker container, you need to ensure that you use `--cap-add=NET_ADMIN` when running
+   the container so that it has permissions to use `iptables`, otherwise it will give permissions denied, even as the root user of the container.
+   Be sure to create a network with `docker network create <network_name>`, and add all nodes that should communicate together to the same network with
+   `--network=<network_name>` when runnning the container with `docker run`.
+
+   `docker-compose`-note: since `--cap-add=NET_ADMIN` is not supported in [swarm mode](https://docs.docker.com/compose/compose-file/compose-file-v3/#cap_add-cap_drop)
+   it is not recommended to test the elevator with `docker-compose` in combination with `--scale SERVICE=NUM`, since you are unable to test packet loss,
+   using a `docker-compose.yml` with one service for _each_ node would however work.
 
  
 Elevator hardware
