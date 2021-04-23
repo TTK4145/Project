@@ -67,6 +67,8 @@ In case you want to block *everything*, change the rule to let the simulator(s) 
     ```
     sudo iptables -A INPUT -p tcp --dport 15657 -j ACCEPT
     sudo iptables -A INPUT -p tcp --sport 15657 -j ACCEPT
+    sudo iptables -A OUTPUT -p tcp --dport 15657 -j ACCEPT
+    sudo iptables -A OUTPUT -p tcp --sport 15657 -j ACCEPT
     # +more for other simulator ports you use
     sudo iptables -A INPUT -j DROP
     sudo iptables -A OUTPUT -j DROP
