@@ -52,12 +52,8 @@ Be reasonable: There may be semantic hoops that you can jump through to create s
    - This means that a single elevator arriving at a floor should *not* clear both up and down calls simultaneously
    - If the elevator has no reason to travel in the direction it has announced (e.g. a both up and down are requested, but the people entering the elevator all want to go down), the elevator should "announce" that it is changing direction by first clearing the call in the opposite direction, then keeping the door open for another 3 seconds
 
-### Multiple elevators should be more efficient than one
- - The calls should be distributed across the elevators in a reasonable way
-   - Ex: If all three elevators are idle and two of them are at the bottom floor, then a new call at the top floor should be handled by the closest elevator (i.e. neither of the two at the bottom).
- - You are free to choose and design your own "cost function" of some sort: Minimal movement, minimal waiting time, etc.
- - The project is not about creating the "best" or "optimal" distribution of calls. It only has to be clear that the elevators are cooperating and communicating.
-
+### Calls should be served as efficiently as possible
+ - The calls should be distributed across the elevators in such a way that they are serviced as quickly as possible
 
 Start with `1 <= n <= 3` elevators, and `m == 4` floors. Try to avoid hard-coding these values: You should be able to add a fourth elevator with no extra configuration, or change the number of floors with minimal configuration. You do, however, not need to test for `n > 3` and `m != 4`.
 
