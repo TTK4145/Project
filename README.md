@@ -48,8 +48,9 @@ Be reasonable: There may be semantic hoops that you can jump through to create s
 
 ### An individual elevator should behave sensibly and efficiently
  - No stopping at every floor "just to be safe"
- - The hall "call upward" and "call downward" buttons should behave differently
-   - Ex: If the elevator is moving from floor 1 up to floor 4 and there is a downward call at floor 3, then the elevator should not stop on its way upward, but should return back to floor 3 on its way down
+ - Clearing a hall call button light is assumed to mean that the elevator that arrived at that floor announces "going up" or "going down" to the user (for up and down buttons respectively), and users are assumed to only enter an elevator moving in the direction they have requested
+   - This means that a single elevator arriving at a floor should *not* clear both up and down calls simultaneously
+   - If the elevator has no reason to travel in the direction it has announced (e.g. a both up and down are requested, but the people entering the elevator all want to go down), the elevator should "announce" that it is changing direction by first clearing the call in the opposite direction, then keeping the door open for another 3 seconds
 
 ### Multiple elevators should be more efficient than one
  - The calls should be distributed across the elevators in a reasonable way
@@ -77,9 +78,6 @@ The following assumptions will always be true during testing:
 Unspecified behavior
 --------------------
 Some things are left intentionally unspecified. Their implementation will not be tested, and are therefore up to you.
-
-Which calls are cleared when stopping at a floor
- - You can clear only the calls in the direction of travel, or assume that everyone enters/exits the elevator when the door opens
 
 How the elevator behaves when it cannot connect to the network (router) during initialization
  - You can either enter a "single-elevator" mode, or refuse to start
