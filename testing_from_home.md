@@ -54,7 +54,7 @@ Blocking everything is probably a little aggressive, as you might want to use a 
 
 ### Blocking everything
 
-In case you want to block *everything*, change the rule to let the simulator(s) through, then drop everything else. This is what the student assistants do for live testing on the lab, as it lets them avoid having to look up what ports you program uses.
+In case you want to block *everything*, change the rule to let the simulator(s) through, then drop everything else. 
 
  - Linux / `iptables`
     ```
