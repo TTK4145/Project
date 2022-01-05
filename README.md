@@ -1,15 +1,12 @@
 Elevator Project
 ================
 
-
-Summary
--------
 Create software for controlling `n` elevators working in parallel across `m` floors.
 
+Be reasonable: There may be semantic hoops that you can jump through to create something that is "technically correct". Do not hesitate to contact us if you feel that something is ambiguous or missing from these requirements.
 
 Main requirements
 -----------------
-Be reasonable: There may be semantic hoops that you can jump through to create something that is "technically correct". Do not hesitate to contact us if you feel that something is ambiguous or missing from these requirements.
 
 ### The button lights are a service guarantee
  - Once the light on a hall call button (buttons for calling an elevator to that floor; top 6 buttons on the control panel) is turned on, an elevator should arrive at that floor
@@ -55,8 +52,6 @@ Be reasonable: There may be semantic hoops that you can jump through to create s
 ### Calls should be served as efficiently as possible
  - The calls should be distributed across the elevators in such a way that they are serviced as quickly as possible
 
-Start with `1 <= n <= 3` elevators, and `m == 4` floors. Try to avoid hard-coding these values: You should be able to add a fourth elevator with no extra configuration, or change the number of floors with minimal configuration. You do, however, not need to test for `n > 3` and `m != 4`.
-
 
 Permitted assumptions
 ---------------------
@@ -83,6 +78,13 @@ How the hall (call up, call down) buttons work when the elevator is disconnected
 
 What the stop button does
  - The stop button functionality (if/when implemented) is up to you
+
+Recommendations
+---------------
+
+Start with `1 <= n <= 3` elevators, and `m == 4` floors. Try to avoid hard-coding these values: You should be able to add a fourth elevator with no extra configuration, or change the number of floors with minimal configuration. You do, however, not need to test for `n > 3` and `m != 4`.
+
+If you need to specify the identifier of an elevator when it starts, we recommend that you implement the command-line switch `--id <number>`.
 
 Additional resources
 --------------------
