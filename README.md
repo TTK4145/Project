@@ -49,8 +49,13 @@ Main requirements
    - This means that a single elevator arriving at a floor should *not* clear both up and down calls simultaneously
    - If the elevator has no reason to travel in the direction it has announced (e.g. a both up and down are requested, but the people entering the elevator all want to go down), the elevator should "announce" that it is changing direction by first clearing the call in the opposite direction, then keeping the door open for another 3 seconds
 
+Secondary requirements
+----------------------
+
+*These requirements will only be regarded if the system satisfies the main requirements.*
+
 ### Calls should be served as efficiently as possible
- - The calls should be distributed across the elevators in such a way that they are serviced as quickly as possible
+ - The calls should be distributed across the elevators in such a way that they are serviced as soon as possible
 
 
 Permitted assumptions
